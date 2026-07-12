@@ -1,0 +1,23 @@
+# Entornos virtuales de Python
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+
+# Variables de entorno con secretos (si las creas más adelante)
+.env
+.env.local
+
+# Dependencias de Node (frontend)
+node_modules/
+frontend/web/node_modules/
+frontend/mobile/node_modules/
+
+# Archivos de builds
+dist/
+build/
+
+# Archivos del sistema/editor
+.DS_Store
+.vscode/
+*.swp
