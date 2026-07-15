@@ -4,11 +4,11 @@ services:
     container_name: validqr_db
     restart: always
     environment:
-      POSTGRES_USER: adminvalidqr
-      POSTGRES_PASSWORD: validqr123
-      POSTGRES_DB: validqr_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -26,8 +26,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://adminvalidqr:validqr123@db:5432/validqr_db
-      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
     depends_on:
       - db
       - redis
