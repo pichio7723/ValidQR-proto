@@ -15,9 +15,9 @@ from core.database import Base
 # Importa TODOS tus modelos aquí, aunque no los uses directamente en este archivo.
 # Alembic necesita que Python "vea" cada modelo para que se registre en Base.metadata.
 from models.usuario import Usuario
-#from models.ficha import Ficha
-#from models.sede import Sede
-#from models.codigo_qr import CodigoQR
+from models.ficha import Ficha
+from models.sede import Sede
+from models.codigo_qr import CodigoQR
 #from models.asistencia import Asistencia
 
 # this is the Alembic Config object, which provides
