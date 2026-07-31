@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 
 class CodigoQRBase(BaseModel):
     instructor_id: int

@@ -18,7 +18,7 @@ from models.usuario import Usuario
 from models.ficha import Ficha
 from models.sede import Sede
 from models.codigo_qr import CodigoQR
-#from models.asistencia import Asistencia
+from models.asistencia import Asistencia
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
