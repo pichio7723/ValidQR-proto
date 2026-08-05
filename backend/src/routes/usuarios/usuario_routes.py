@@ -2,11 +2,13 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from schemas.usuario import UsuarioLogin, Token
 
+
 from core.database import get_db
-from schemas.usuario import UsuarioCrear, UsuarioOut
+from schemas.usuario import UsuarioCrear, UsuarioOut, UsuarioUpdate
 from services.usuarios.usuario_service import registrar_usuario
 from services.usuarios.usuario_service import login_usuario
 from services.usuarios.usuario_service import eliminar_usuario_service
+from services.usuarios.usuario_service import actualizar_usuario_service
 
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])
 
@@ -14,6 +16,14 @@ router = APIRouter(prefix="/usuarios", tags=["usuarios"])
 @router.post("/registro", response_model=UsuarioOut)
 def registro(usuario_data: UsuarioCrear, db: Session = Depends(get_db)):
     return registrar_usuario(db, usuario_data)
+
+@router.put("/{usuario_id}", response_model=UsuarioOut)
+def actualizar(
+    usuario_id: int,
+    datos: UsuarioUpdate,
+    db: Session = Depends(get_db)
+):
+    return actualizar_usuario_service(db, usuario_id, datos)
 
 @router.post("/login", response_model=Token)
 def login(credenciales: UsuarioLogin, db: Session = Depends(get_db)):

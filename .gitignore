@@ -4,7 +4,7 @@ backend/venv/
 __pycache__/
 *.pyc
 
-# Variables de entorno con secretos (si las creas más adelante)
+# Variables de entorno clasificadas (si las creas más adelante)
 .env
 .env.local
 
