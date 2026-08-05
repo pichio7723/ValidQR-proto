@@ -10,7 +10,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
-        case_sensitive = False
+        case_sensitive = False #para leer variables en minuscula sin importar como estan en el .env
 
 
 settings = Settings()

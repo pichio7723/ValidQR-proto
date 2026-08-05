@@ -11,6 +11,12 @@ class AsistenciaBase(BaseModel):
 class AsistenciaCreate(AsistenciaBase):
     pass
 
+class EscanearQR(BaseModel):
+    codigo_id: str
+    aprendiz_id: int
+    latitud: float
+    longitud: float
+
 class AsistenciaOut(AsistenciaBase):
     id: int
 
