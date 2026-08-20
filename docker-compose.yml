@@ -1,39 +1,48 @@
 services:
   db:
     image: postgres:16
-    container_name: validqr_db
+    container_name: validqr_proto_db
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_proto_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7
-    container_name: validqr_redis
+    container_name: validqr_proto_redis
     restart: always
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
   backend:
     build: ./backend
-    container_name: validqr_backend
+    container_name: validqr_proto_backend
     restart: always
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
-      secret_key: ${SECRET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       - db
       - redis
     volumes:
       - ./backend:/app
 
+  adminer:
+    image: adminer
+    container_name: validqr_proto_adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+
 volumes:
-  postgres_data:
+  postgres_proto_data:

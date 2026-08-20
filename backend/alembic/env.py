@@ -19,6 +19,10 @@ from models.ficha import Ficha
 from models.sede import Sede
 from models.codigo_qr import CodigoQR
 from models.asistencia import Asistencia
+from models.salon import Salon
+from models.franjas_clase import FranjaClase
+from models.trimestre import Trimestre
+from models.horario import Horario
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

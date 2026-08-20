@@ -4,11 +4,7 @@ from schemas.ficha import FichaCreate
 
 
 def crear_ficha(db: Session, ficha_data: FichaCreate) -> Ficha:
-    nueva_ficha = Ficha(
-        instructor_id=ficha_data.instructor_id,
-        numero_ficha=ficha_data.numero_ficha,
-        nombre_programa=ficha_data.nombre_programa,
-    )
+    nueva_ficha = Ficha(numero_ficha=ficha_data.numero_ficha, nombre_programa=ficha_data.nombre_programa)
     db.add(nueva_ficha)
     db.commit()
     db.refresh(nueva_ficha)
@@ -23,8 +19,8 @@ def obtener_por_numero(db: Session, numero_ficha: int) -> Ficha | None:
     return db.query(Ficha).filter(Ficha.numero_ficha == numero_ficha).first()
 
 
-def listar_por_instructor(db: Session, instructor_id: int) -> list[Ficha]:
-    return db.query(Ficha).filter(Ficha.instructor_id == instructor_id).all()
+def listar_todas(db: Session) -> list[Ficha]:
+    return db.query(Ficha).all()
 
 
 def actualizar_ficha(db: Session, ficha: Ficha, datos: dict) -> Ficha:

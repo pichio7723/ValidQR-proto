@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from core.roles import Rol
 from core.database import get_db
+from core.security import requerir_rol
+from models.usuario import Usuario
 from schemas.sede import SedeCrear, SedeUpdate, SedeOut
 from services.sedes.sede_service import (
     crear_sede_service,
@@ -14,9 +17,11 @@ from services.sedes.sede_service import (
 router = APIRouter(prefix="/sedes", tags=["sedes"])
 
 
-@router.post("/", response_model=SedeOut)
-def crear(sede_data: SedeCrear, db: Session = Depends(get_db)):
-    return crear_sede_service(db, sede_data)
+# ---------- Lectura (pública o para cualquier rol) ----------
+
+@router.get("/", response_model=list[SedeOut])
+def listar(db: Session = Depends(get_db)):
+    return listar_sedes_service(db)
 
 
 @router.get("/{sede_id}", response_model=SedeOut)
@@ -24,20 +29,31 @@ def obtener(sede_id: int, db: Session = Depends(get_db)):
     return obtener_sede_service(db, sede_id)
 
 
-@router.get("/", response_model=list[SedeOut])
-def listar(db: Session = Depends(get_db)):
-    return listar_sedes_service(db)
+# ---------- Modificaciones: solo administrador ----------
+
+@router.post("/", response_model=SedeOut)
+def crear(
+    sede_data: SedeCrear,
+    db: Session = Depends(get_db),
+    usuario_actual: Usuario = Depends(requerir_rol(Rol.ADMIN)),
+):
+    return crear_sede_service(db, sede_data)
 
 
 @router.put("/{sede_id}", response_model=SedeOut)
 def actualizar(
     sede_id: int,
     datos: SedeUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    usuario_actual: Usuario = Depends(requerir_rol(Rol.ADMIN)),
 ):
     return actualizar_sede_service(db, sede_id, datos)
 
 
 @router.delete("/{sede_id}", status_code=204)
-def eliminar(sede_id: int, db: Session = Depends(get_db)):
+def eliminar(
+    sede_id: int,
+    db: Session = Depends(get_db),
+    usuario_actual: Usuario = Depends(requerir_rol(Rol.ADMIN)),
+):
     eliminar_sede_service(db, sede_id)

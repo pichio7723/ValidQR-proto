@@ -1,10 +1,11 @@
 from pydantic import BaseModel, ConfigDict
-
+from core.roles import Rol
 
 class UsuarioBase(BaseModel):
     nombre: str
     email: str
-    rol: str
+    rol: Rol
+    ficha_id : int | None = None
 
 
 class UsuarioCrear(UsuarioBase):
@@ -15,7 +16,7 @@ class UsuarioUpdate(BaseModel):
     nombre: str | None = None
     email: str | None = None
     password: str | None = None
-    rol: str | None = None
+    rol: Rol | None = None
 
 
 class UsuarioOut(UsuarioBase):

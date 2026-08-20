@@ -22,7 +22,8 @@ def registrar_asistencia_service(db: Session, aprendiz_id: int, codigo_id: str, 
     if not codigo:
         raise HTTPException(status_code=404, detail="Este código no corresponde a tu ficha")
 
-    if codigo.expiracion < datetime.now(timezone.utc):
+    expiracion_utc = codigo.expiracion.replace(tzinfo=timezone.utc)
+    if expiracion_utc < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="Este código QR ya expiró, solicita uno nuevo")
 
     if existe_asistencia_hoy(db, aprendiz_id, codigo.ficha_id):

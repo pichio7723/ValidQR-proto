@@ -34,3 +34,4 @@ def login(credenciales: UsuarioLogin, db: Session = Depends(get_db)):
 @router.delete("/{usuario_id}", status_code=204)
 def eliminar(usuario_id: int, db: Session = Depends(get_db)):
     eliminar_usuario_service(db, usuario_id)
+    

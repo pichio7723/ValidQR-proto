@@ -11,5 +11,6 @@ class CodigoQR(Base):
     ficha_id = Column(Integer, ForeignKey("fichas.id"), index=True, nullable=False)
     sede_id = Column(Integer, ForeignKey("sedes.id"), index=True, nullable=False)
     expiracion = Column(DateTime, default=lambda: datetime.now(timezone.utc) + timedelta(minutes=5), nullable=False)
+    horario_id = Column(Integer, ForeignKey("horarios.id"), index=True, nullable=False)
 
 
