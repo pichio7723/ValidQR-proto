@@ -3,7 +3,6 @@ from pydantic import BaseModel, ConfigDict
 
 
 class CodigoQRBase(BaseModel):
-    instructor_id: int  # temporal, hasta que conectemos el JWT
     ficha_id: int
 
 

@@ -1,0 +1,339 @@
+/* ===== QR Generator ===== */
+.qr-generator {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.qr-controls {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.qr-controls h2 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.qr-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.qr-display {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.qr-header h3 {
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.qr-timer {
+  background: rgba(0, 219, 222, 0.15);
+  color: var(--timber-cyan);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  border: 1px solid rgba(0, 219, 222, 0.3);
+}
+
+.qr-timer.urgent {
+  background: rgba(252, 0, 255, 0.15);
+  color: var(--timber-magenta);
+  border-color: rgba(252, 0, 255, 0.3);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.qr-code-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.qr-info {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.qr-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.qr-info-label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.qr-info-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.qr-id {
+  font-family: 'Courier New', monospace;
+  color: var(--timber-cyan);
+}
+
+.qr-url {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.qr-url-label {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.qr-url code {
+  display: block;
+  background: var(--bg-input);
+  padding: 0.75rem;
+  border-radius: 8px;
+  color: var(--timber-cyan);
+  font-size: 0.8rem;
+  word-break: break-all;
+  border: 1px solid var(--border-subtle);
+}
+
+.qr-instructions {
+  width: 100%;
+  background: rgba(0, 219, 222, 0.05);
+  border: 1px solid rgba(0, 219, 222, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* ===== QR List ===== */
+.qr-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.qr-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.qr-list-header h2 {
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.qr-list-loading,
+.qr-list-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.qr-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.qr-list-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  transition: all var(--transition-base);
+}
+
+.qr-list-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.qr-list-item.expired {
+  opacity: 0.5;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.active {
+  background: rgba(0, 219, 222, 0.15);
+  color: var(--timber-cyan);
+  border: 1px solid rgba(0, 219, 222, 0.3);
+}
+
+.status-badge.expired {
+  background: rgba(252, 0, 255, 0.15);
+  color: var(--timber-magenta);
+  border: 1px solid rgba(252, 0, 255, 0.3);
+}
+
+.qr-item-info {
+  flex: 1;
+}
+
+.qr-item-id {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.qr-item-meta {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.btn-danger {
+  background: rgba(252, 0, 255, 0.1);
+  border: 1px solid rgba(252, 0, 255, 0.3);
+  color: var(--timber-magenta);
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.btn-danger:hover {
+  background: rgba(252, 0, 255, 0.2);
+}
+
+/* ===== Welcome Card ===== */
+.welcome-card {
+  background: linear-gradient(135deg, rgba(252, 0, 255, 0.1), rgba(0, 219, 222, 0.1));
+  border: 1px solid rgba(252, 0, 255, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.welcome-card h2 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.welcome-card p {
+  color: var(--text-secondary);
+}
+
+/* ===== Quick Actions ===== */
+.quick-actions {
+  margin-top: 2rem;
+}
+
+.quick-actions h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.quick-action-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.quick-action-card:hover {
+  border-color: var(--timber-magenta);
+  transform: translateY(-2px);
+}
+
+.quick-action-icon {
+  font-size: 2rem;
+}
+
+.quick-action-label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ===== Placeholder ===== */
+.placeholder-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+}
+
+.placeholder-section h2 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.placeholder-section p {
+  color: var(--text-secondary);
+}
+
+.placeholder-note {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .qr-generator {
+    grid-template-columns: 1fr;
+  }
+}

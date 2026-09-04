@@ -1,0 +1,84 @@
+/* web/src/styles/global.css */
+
+/* ===== Variables de la paleta Timber ===== */
+:root {
+  --timber-magenta: #fc00ff;
+  --timber-cyan: #00dbde;
+  --timber-purple: #a855f7;
+  --timber-blue: #0ea5e9;
+  
+  /* Colores de fondo */
+  --bg-dark: #09090b;
+  --bg-sidebar: #0f0f12;
+  --bg-card: rgba(20, 20, 28, 0.6);
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  
+  /* Bordes */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-focus: rgba(252, 0, 255, 0.4);
+  
+  /* Textos */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  
+  /* Sombras */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+  
+  /* Dimensiones */
+  --sidebar-width: 260px;
+  --header-height: 70px;
+  
+  /* Animaciones */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}
+
+/* ===== Reset básico ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== Scrollbar personalizada ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== Utilidades ===== */
+.gradient-timber {
+  background: linear-gradient(135deg, var(--timber-magenta), var(--timber-cyan));
+}
+
+.gradient-magenta {
+  background: linear-gradient(135deg, var(--timber-magenta), var(--timber-purple));
+}
+
+.gradient-cyan {
+  background: linear-gradient(135deg, var(--timber-cyan), var(--timber-blue));
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--timber-magenta), var(--timber-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
