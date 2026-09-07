@@ -1,17 +1,24 @@
-// web/src/pages/dashboard/DashboardRouter.jsx
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext.jsx';
 import AdminDashboard from './AdminDashboard';
 import InstructorDashboard from './InstructorDashboard';
-//import AprendizDashboard from './AprendizDashboard';
+import AprendizDashboard from './AprendizDashboard';
+
 
 export default function DashboardRouter() {
   const { user, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="spinner"></div>
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#09090b',
+        color: 'white'
+      }}>
+        Cargando...
       </div>
     );
   }
@@ -20,7 +27,6 @@ export default function DashboardRouter() {
     return <Navigate to="/login" />;
   }
 
-  // Normalizar el rol (puede venir en mayúsculas o minúsculas)
   const rol = user.rol?.toLowerCase();
 
   switch (rol) {
@@ -31,7 +37,6 @@ export default function DashboardRouter() {
     case 'aprendiz':
       return <AprendizDashboard user={user} />;
     default:
-      console.warn(`Rol no reconocido: ${rol}`);
       return <Navigate to="/login" />;
   }
 }

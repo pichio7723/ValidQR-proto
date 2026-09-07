@@ -1,9 +1,6 @@
-// web/src/services/admin.service.jsx
 import api from './api';
 
 export const adminService = {
-  // web/src/services/admin.service.jsx
-// Agrega esta sección al objeto adminService:
 
   // ===== CÓDIGOS QR =====
   codigosQr: {

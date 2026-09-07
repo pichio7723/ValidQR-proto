@@ -1,143 +1,188 @@
 // web/src/pages/ScanQR.jsx
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import api from '../services/api'; // Usamos api directamente para evitar dependencias
+import api from '../services/api';
 import { sileo } from 'sileo';
-//import '../styles/pages/login.css'; // Reutilizamos el fondo oscuro y los blobs
+import '../styles/pages/Login.css';
 
 export default function ScanQR() {
   const { codigoId } = useParams();
   const navigate = useNavigate();
-  const [status, setStatus] = useState('loading'); // loading | success | error | expired
+  const [status, setStatus] = useState('loading');
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const checkQR = async () => {
+    const registrarAsistencia = async () => {
       try {
-        // 1. Consultar el código QR al backend
-        const response = await api.get(`/codigos_qr/${codigoId}`);
-        const qr = response.data;
+        // 1. Verificar si hay sesión activa
+        const userResponse = await api.get('/usuarios/me');
+        const usuario = userResponse.data;
         
-        // 2. Validar si está expirado
-        const now = new Date();
-        const expiracion = new Date(qr.expiracion);
-        
-        if (now > expiracion) {
-          setStatus('expired');
-          sileo.error({
-            title: 'Código Expirado',
-            description: 'Este QR ya no es válido. Pide uno nuevo a tu instructor.',
-          });
-          return;
-        }
-        
-        // 3. Si es válido, mostramos éxito
-        // NOTA: Aquí deberías llamar a tu endpoint de POST /asistencias/ 
-        // para registrar realmente la asistencia en la base de datos.
-        setData(qr);
+        // 2. Obtener geolocalización
+        const geolocation = await new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error('Geolocalización no soportada'));
+          }
+          
+          navigator.geolocation.getCurrentPosition(
+            (position) => resolve({
+              lat: position.coords.latitude,
+              lon: position.coords.longitude
+            }),
+            (error) => reject(error),
+            { enableHighAccuracy: true, timeout: 10000 }
+          );
+        });
+
+        // 3. Registrar asistencia
+        const response = await api.post('/asistencias/', {
+          codigo_id: codigoId,
+          aprendiz_id: usuario.id,
+          latitud: geolocation.lat,
+          longitud: geolocation.lon
+        });
+
+        setData(response.data);
         setStatus('success');
         sileo.success({
           title: '¡Asistencia Registrada!',
-          description: `Ficha: ${qr.ficha_id} | Horario: ${qr.horario_id}`,
+          description: 'Tu asistencia ha sido registrada correctamente',
         });
 
       } catch (error) {
-        setStatus('error');
-        sileo.error({
-          title: 'Código Inválido',
-          description: error.response?.data?.detail || 'No pudimos encontrar este código QR.',
-        });
+        console.error('Error:', error);
+        
+        // Si no hay autenticación, redirigir al login
+        if (error.response?.status === 401) {
+          sileo.warning({
+            title: 'Sesión requerida',
+            description: 'Debes iniciar sesión para registrar asistencia',
+          });
+          setTimeout(() => navigate('/login'), 2000);
+          return;
+        }
+        
+        // Manejar otros errores
+        if (error.response?.status === 404) {
+          setStatus('error');
+          sileo.error({
+            title: 'Código Inválido',
+            description: 'Este código QR no existe',
+          });
+        } else if (error.response?.status === 400) {
+          const detail = error.response.data.detail;
+          
+          if (detail.includes('expiró')) {
+            setStatus('expired');
+          } else if (detail.includes('ya registraste')) {
+            setStatus('duplicate');
+          } else if (detail.includes('físicamente')) {
+            setStatus('location');
+          }
+          
+          sileo.error({
+            title: 'No se pudo registrar',
+            description: detail,
+          });
+        } else if (error.response?.status === 403) {
+          setStatus('error');
+          sileo.error({
+            title: 'Acceso denegado',
+            description: error.response.data.detail,
+          });
+        } else {
+          setStatus('error');
+          sileo.error({
+            title: 'Error',
+            description: error.response?.data?.detail || 'No pudimos validar el código',
+          });
+        }
       }
     };
     
-    checkQR();
-  }, [codigoId]);
+    registrarAsistencia();
+  }, [codigoId, navigate]);
 
   return (
     <div className="login-container">
-      {/* Reutilizamos los blobs del login para mantener la estética */}
       <div className="blob blob-1"></div>
       <div className="blob blob-2"></div>
       
       <div className="login-card" style={{ textAlign: 'center', maxWidth: '450px' }}>
         
-        {/* ESTADO: CARGANDO */}
         {status === 'loading' && (
           <>
             <div className="logo-icon" style={{ margin: '0 auto 1rem' }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-                <path d="M21 3v5h-5" />
-              </svg>
+              ⏳
             </div>
-            <h1 className="login-title">Validando código...</h1>
-            <p className="login-subtitle">Por favor espera un momento</p>
+            <h1 className="login-title">Validando...</h1>
+            <p className="login-subtitle">Obteniendo ubicación y registrando asistencia</p>
           </>
         )}
         
-        {/* ESTADO: ÉXITO */}
         {status === 'success' && (
           <>
             <div className="logo-icon" style={{ margin: '0 auto 1rem', background: 'linear-gradient(135deg, #10b981, #00dbde)' }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              ✅
             </div>
             <h1 className="login-title" style={{ color: '#10b981' }}>¡Asistencia Exitosa!</h1>
             <p className="login-subtitle">
-              Tu asistencia ha sido registrada correctamente en el sistema.
+              Ficha: {data?.ficha_id} • Sede: {data?.sede_id}
             </p>
-            <div style={{ 
-              marginTop: '1.5rem', 
-              padding: '1rem', 
-              background: 'rgba(255,255,255,0.05)', 
-              borderRadius: '8px',
-              fontSize: '0.85rem',
-              color: 'var(--text-secondary)'
-            }}>
-              <p><strong>Ficha ID:</strong> {data?.ficha_id}</p>
-              <p><strong>Sede ID:</strong> {data?.sede_id}</p>
-            </div>
             <button 
-              onClick={() => window.location.href = '/'} 
+              onClick={() => navigate('/dashboard')} 
               className="login-button"
               style={{ marginTop: '1.5rem' }}
             >
-              Volver al inicio
+              Ir al Dashboard
             </button>
           </>
         )}
         
-        {/* ESTADO: EXPIRADO */}
         {status === 'expired' && (
           <>
             <div className="logo-icon" style={{ margin: '0 auto 1rem', background: 'linear-gradient(135deg, #fc00ff, #a855f7)' }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
+              
             </div>
             <h1 className="login-title">Código Expirado</h1>
-            <p className="login-subtitle">
-              Este código QR ha expirado. Por favor, solicita uno nuevo a tu instructor.
-            </p>
+            <p className="login-subtitle">Solicita uno nuevo a tu instructor</p>
           </>
         )}
         
-        {/* ESTADO: ERROR (No existe) */}
+        {status === 'duplicate' && (
+          <>
+            <div className="logo-icon" style={{ margin: '0 auto 1rem', background: 'linear-gradient(135deg, #ffc107, #ff9800)' }}>
+              ️
+            </div>
+            <h1 className="login-title">Ya Registraste Asistencia</h1>
+            <p className="login-subtitle">Ya habías escaneado este código hoy</p>
+          </>
+        )}
+        
+        {status === 'location' && (
+          <>
+            <div className="logo-icon" style={{ margin: '0 auto 1rem', background: 'linear-gradient(135deg, #ef4444, #fc00ff)' }}>
+              📍
+            </div>
+            <h1 className="login-title">Fuera de Rango</h1>
+            <p className="login-subtitle">Debes estar físicamente en el salón de clase</p>
+          </>
+        )}
+        
         {status === 'error' && (
           <>
             <div className="logo-icon" style={{ margin: '0 auto 1rem', background: 'linear-gradient(135deg, #ef4444, #fc00ff)' }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="15" y1="9" x2="9" y2="15" />
-                <line x1="9" y1="9" x2="15" y2="15" />
-              </svg>
+              
             </div>
-            <h1 className="login-title">Código Inválido</h1>
-            <p className="login-subtitle">
-              El código QR que escaneaste no existe o fue eliminado.
-            </p>
+            <h1 className="login-title">Error</h1>
+            <p className="login-subtitle">No pudimos validar el código QR</p>
+            <button 
+              onClick={() => navigate('/login')} 
+              className="login-button"
+              style={{ marginTop: '1.5rem' }}
+            >
+              Iniciar Sesión
+            </button>
           </>
         )}
       </div>

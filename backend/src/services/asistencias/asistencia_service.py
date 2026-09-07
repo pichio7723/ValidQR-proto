@@ -2,8 +2,9 @@ from math import radians, sin, cos, sqrt, atan2
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from typing import Optional
 
-from repositories.asistencias.asistencia_repository import crear_asistencia, existe_asistencia_hoy
+from repositories.asistencias.asistencia_repository import crear_asistencia, existe_asistencia_hoy, obtener_asistencias_por_instructor
 from repositories.codigos_qr.codigo_qr_repository import obtener_por_id as obtener_codigo_por_id
 from repositories.sedes.sede_repository import obtener_por_id as obtener_sede_por_id
 
@@ -36,3 +37,28 @@ def registrar_asistencia_service(db: Session, aprendiz_id: int, codigo_id: str, 
         raise HTTPException(status_code=400, detail="Debes estar físicamente en el lugar de clase para registrar asistencia")
 
     return crear_asistencia(db, aprendiz_id, codigo.ficha_id, codigo.sede_id, codigo.id)
+
+def listar_asistencias_instructor_service(db: Session, instructor_id: int, ficha_id: Optional[int] = None):
+    """
+    Lista todas las asistencias de las fichas asignadas al instructor.
+    """
+    asistencias = obtener_asistencias_por_instructor(db, instructor_id, ficha_id)
+    
+    # Transformar a formato detallado
+    resultado = []
+    for asistencia in asistencias:
+        resultado.append({
+            "id": asistencia.id,
+            "aprendiz_id": asistencia.aprendiz_id,
+            "aprendiz_nombre": asistencia.aprendiz.nombre,
+            "aprendiz_email": asistencia.aprendiz.email,
+            "ficha_id": asistencia.ficha_id,
+            "ficha_numero": str(asistencia.ficha.numero_ficha) if asistencia.ficha and asistencia.ficha.numero_ficha else None,  # ✅ Convertir a string
+            "ficha_programa": asistencia.ficha.nombre_programa if asistencia.ficha else None,
+            "sede_id": asistencia.sede_id,
+            "sede_nombre": asistencia.sede.nombre if asistencia.sede else None,
+            "codigo_id": asistencia.codigo_id,
+            "creacion": asistencia.creacion
+        })
+    
+    return resultado

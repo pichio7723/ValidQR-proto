@@ -1,0 +1,173 @@
+/* ===== Panel Aprendiz ===== */
+.aprendiz-scan-container {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.scan-mode-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.mode-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.mode-btn.active {
+  background: linear-gradient(135deg, rgba(252, 0, 255, 0.1), rgba(0, 219, 222, 0.1));
+  border-color: var(--timber-magenta);
+  color: var(--text-primary);
+}
+
+/* ===== Cámara ===== */
+.camera-scan-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.scanner-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+  min-height: 400px;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.qr-scanner {
+  width: 100%;
+  height: 100%;
+}
+
+.qr-scanner video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.scanner-icon {
+  font-size: 4rem;
+  opacity: 0.5;
+}
+
+.scanner-placeholder p {
+  font-size: 1.1rem;
+}
+
+/* ===== Manual ===== */
+.manual-scan-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.manual-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.manual-form-container h3 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.manual-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.manual-form {
+  margin-bottom: 2rem;
+}
+
+.manual-instructions {
+  background: rgba(0, 219, 222, 0.05);
+  border: 1px solid rgba(0, 219, 222, 0.2);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.manual-instructions h3 {
+  color: var(--timber-cyan);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.manual-instructions ol {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding-left: 1.5rem;
+}
+
+.manual-instructions li {
+  margin-bottom: 0.5rem;
+}
+
+/* ===== Instrucciones generales ===== */
+.scan-instructions {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.scan-instructions h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.scan-instructions ol {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding-left: 1.5rem;
+}
+
+.scan-instructions li {
+  margin-bottom: 0.5rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .scan-mode-selector {
+    flex-direction: column;
+  }
+
+  .scanner-container {
+    min-height: 300px;
+  }
+}

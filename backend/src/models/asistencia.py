@@ -1,4 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime, timedelta, timezone
 
@@ -12,3 +13,7 @@ class Asistencia(Base):
     sede_id = Column(Integer, ForeignKey("sedes.id"), index=True, nullable=False)
     codigo_id = Column(String, ForeignKey("codigos_qr.id"), index=True, nullable=False)
     creacion = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    aprendiz = relationship("Usuario", foreign_keys=[aprendiz_id])
+    ficha = relationship("Ficha", foreign_keys=[ficha_id])
+    sede = relationship("Sede", foreign_keys=[sede_id])

@@ -16,10 +16,10 @@ export default function AdminDashboard({ user }) {
   const [showForm, setShowForm] = useState(null);
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'sedes', label: 'Sedes', icon: '🏢' },
-    { id: 'salones', label: 'Salones', icon: '🏫' },
-    { id: 'franjas', label: 'Franjas Horarias', icon: '🕐' },
+    { id: 'dashboard', label: 'Dashboard', icon: '' },
+    { id: 'sedes', label: 'Sedes', icon: '' },
+    { id: 'salones', label: 'Salones', icon: '' },
+    { id: 'franjas', label: 'Franjas Horarias', icon: '' },
     { id: 'trimestres', label: 'Trimestres', icon: '' },
     { id: 'fichas', label: 'Fichas', icon: '' },
     { id: 'horarios', label: 'Horarios', icon: '' },

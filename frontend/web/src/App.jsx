@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/authContext.jsx';
 import { Toaster } from 'sileo';
 import Login from './pages/login';
+import Registro from './pages/Registro';
 import Dashboard from './pages/dashboard/DashboardRouter.jsx';
 import ScanQR from './pages/ScanQR';
 
@@ -53,6 +54,7 @@ function App() {
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
             
             {/* Ruta pública para escanear QR (sin autenticación) */}
             <Route path="/escanear/:codigoId" element={<ScanQR />} />

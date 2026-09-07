@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi import HTTPException
 from core.security import crear_token
+from core.roles import Rol
 
 
 from schemas.usuario import UsuarioLogin
@@ -13,9 +14,21 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def registrar_usuario(db: Session, usuario_data: UsuarioCrear):
+    # Validar que el email no exista
     usuario_existente = obtener_por_email(db, usuario_data.email)
     if usuario_existente:
         raise HTTPException(status_code=400, detail="Ya existe una cuenta con este email")
+
+    # Validar que si es aprendiz, tenga ficha_id
+    if usuario_data.rol == Rol.APRENDIZ and not usuario_data.ficha_id:
+        raise HTTPException(status_code=400, detail="Los aprendices deben tener una ficha asignada")
+    
+    # Validar que la ficha exista si se proporcionó
+    if usuario_data.ficha_id:
+        from models.ficha import Ficha
+        ficha = db.query(Ficha).filter(Ficha.id == usuario_data.ficha_id).first()
+        if not ficha:
+            raise HTTPException(status_code=404, detail="La ficha especificada no existe")
 
     password_hash = pwd_context.hash(usuario_data.password)
     return crear_usuario(db, usuario_data, password_hash)

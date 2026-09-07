@@ -4,6 +4,8 @@ import Sidebar from '../../components/dashboard/Sidebar';
 import Header from '../../components/dashboard/Header';
 import QRGenerator from '../../components/instructor/QRGenerator';
 import QRList from '../../components/instructor/QRList';
+import VerAsistencia from './VerAsistencia';
+import MisFichas from './MisFichas';
 import '../../styles/pages/dashboard/dashboard.css';
 import '../../styles/pages/dashboard/instructor.css';
 
@@ -12,21 +14,16 @@ export default function InstructorDashboard({ user }) {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'generar-qr', label: 'Generar QR', icon: '' },
+    { id: 'generar-qr', label: 'Generar QR', icon: '📱' },
     { id: 'mis-qr', label: 'Mis Códigos QR', icon: '🔢' },
     { id: 'mis-fichas', label: 'Mis Fichas', icon: '📋' },
     { id: 'asistencia', label: 'Ver Asistencia', icon: '✅' },
-    { id: 'mis-horarios', label: 'Mis Horarios', icon: '' },
+    { id: 'mis-horarios', label: 'Mis Horarios', icon: '🕒' },
   ];
 
   return (
     <div className="dashboard-container">
-      <Sidebar
-        user={user}
-        menuItems={menuItems}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+      <Sidebar user={user} menuItems={menuItems} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <main className="main-content">
         <Header user={user} />
@@ -39,12 +36,31 @@ export default function InstructorDashboard({ user }) {
             </p>
           </div>
 
-          {activeTab === 'dashboard' && <DashboardHome user={user} />}
-          {activeTab === 'generar-qr' && <QRGenerator user={user} />}
-          {activeTab === 'mis-qr' && <QRList user={user} />}
-          {activeTab === 'mis-fichas' && <PlaceholderSection title="Mis Fichas" description="Lista de fichas asignadas" />}
-          {activeTab === 'asistencia' && <PlaceholderSection title="Asistencia" description="Registro de asistencia de tus fichas" />}
-          {activeTab === 'mis-horarios' && <PlaceholderSection title="Mis Horarios" description="Tus horarios de clase" />}
+          {/* ✅ Cada sección siempre está montada, solo se oculta/visualiza con CSS */}
+          
+          <div style={{ display: activeTab === 'dashboard' ? 'block' : 'none' }}>
+            <DashboardHome user={user} />
+          </div>
+
+          <div style={{ display: activeTab === 'generar-qr' ? 'block' : 'none' }}>
+            <QRGenerator user={user} />
+          </div>
+
+          <div style={{ display: activeTab === 'mis-qr' ? 'block' : 'none' }}>
+            <QRList user={user} />
+          </div>
+
+          <div style={{ display: activeTab === 'mis-fichas' ? 'block' : 'none' }}>
+            <MisFichas user={user} />
+          </div>
+
+          <div style={{ display: activeTab === 'asistencia' ? 'block' : 'none' }}>
+            <VerAsistencia user={user} />
+          </div>
+
+          <div style={{ display: activeTab === 'mis-horarios' ? 'block' : 'none' }}>
+            <PlaceholderSection title="Mis Horarios" description="Tus horarios de clase" user={user} />
+          </div>
         </div>
       </main>
     </div>
@@ -55,7 +71,7 @@ function DashboardHome({ user }) {
   return (
     <div className="instructor-welcome">
       <div className="welcome-card">
-        <h2>Hola, {user.nombre} </h2>
+        <h2>Hola, {user.nombre}</h2>
         <p>Genera códigos QR para que tus aprendices registren asistencia.</p>
       </div>
 
@@ -104,12 +120,11 @@ function DashboardHome({ user }) {
   );
 }
 
-function PlaceholderSection({ title, description }) {
+function PlaceholderSection({ title, description, user }) {
   return (
     <div className="placeholder-section">
       <h2>{title}</h2>
       <p>{description}</p>
-      <p className="placeholder-note">🚧 Esta sección estará disponible próximamente</p>
     </div>
   );
 }

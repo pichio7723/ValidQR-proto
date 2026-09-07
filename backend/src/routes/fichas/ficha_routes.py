@@ -25,7 +25,7 @@ def obtener(ficha_id: int, db: Session = Depends(get_db), usuario_actual: Usuari
 
 
 @router.get("/", response_model=list[FichaOut])
-def listar(db: Session = Depends(get_db), usuario_actual: Usuario = Depends(get_usuario_actual)):
+def listar(db: Session = Depends(get_db)):
     return listar_fichas_service(db)
 
 

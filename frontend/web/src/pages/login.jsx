@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext.jsx';
 import { sileo } from 'sileo';
 import '../styles/pages/Login.css';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -130,6 +131,12 @@ export default function Login() {
         {/* Footer */}
         <div className="login-footer">
           <p>¿Problemas para acceder? <a href="#">Contacta al administrador</a></p>
+          <p>
+             ¿No tienes cuenta?{' '}
+            <Link to="/registro" className="login-link">
+             Regístrate aquí
+            </Link>
+          </p>
         </div>
       </div>
     </div>
