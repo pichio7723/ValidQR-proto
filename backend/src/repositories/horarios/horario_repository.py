@@ -1,3 +1,4 @@
+# backend/src/repositories/horarios/horario_repository.py
 from datetime import date, time
 from sqlalchemy.orm import Session
 from models.horario import Horario
@@ -66,3 +67,14 @@ def buscar_horario_vigente(
         )
         .first()
     )
+
+
+def obtener_por_instructor_y_ficha(db: Session, instructor_id: int, ficha_id: int) -> Horario | None:
+    """
+    Busca si existe al menos un horario que asigne al instructor a la ficha específica.
+    Se usa para validar permisos de registro de asistencia.
+    """
+    return db.query(Horario).filter(
+        Horario.instructor_id == instructor_id,
+        Horario.ficha_id == ficha_id
+    ).first()

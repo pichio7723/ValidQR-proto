@@ -1,5 +1,6 @@
 // web/src/pages/dashboard/InstructorDashboard.jsx
 import { useState } from 'react';
+import { InstructorProvider } from '../../context/InstructorContext'; // ✅ 1. Importar el Provider
 import Sidebar from '../../components/dashboard/Sidebar';
 import Header from '../../components/dashboard/Header';
 import QRGenerator from '../../components/instructor/QRGenerator';
@@ -13,57 +14,60 @@ export default function InstructorDashboard({ user }) {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'generar-qr', label: 'Generar QR', icon: '📱' },
-    { id: 'mis-qr', label: 'Mis Códigos QR', icon: '🔢' },
-    { id: 'mis-fichas', label: 'Mis Fichas', icon: '📋' },
-    { id: 'asistencia', label: 'Ver Asistencia', icon: '✅' },
-    { id: 'mis-horarios', label: 'Mis Horarios', icon: '🕒' },
+    { id: 'dashboard', label: 'Dashboard', icon: '' },
+    { id: 'generar-qr', label: 'Generar QR', icon: '' },
+    { id: 'mis-qr', label: 'Mis Códigos QR', icon: '' },
+    { id: 'mis-fichas', label: 'Mis Fichas', icon: '' },
+    { id: 'asistencia', label: 'Ver Asistencia', icon: '' },
+    { id: 'mis-horarios', label: 'Mis Horarios', icon: '' },
   ];
 
   return (
-    <div className="dashboard-container">
-      <Sidebar user={user} menuItems={menuItems} activeTab={activeTab} setActiveTab={setActiveTab} />
+    // ✅ 2. Envolver todo el layout con el Provider para que el estado sea global
+    <InstructorProvider>
+      <div className="dashboard-container">
+        <Sidebar user={user} menuItems={menuItems} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <main className="main-content">
-        <Header user={user} />
+        <main className="main-content">
+          <Header user={user} />
 
-        <div className="content-area">
-          <div className="content-header">
-            <h1 className="page-title">Panel de Instructor</h1>
-            <p className="page-subtitle">
-              Bienvenido, {user.nombre} — Gestiona tus fichas y genera códigos QR
-            </p>
+          <div className="content-area">
+            <div className="content-header">
+              <h1 className="page-title">Panel de Instructor</h1>
+              <p className="page-subtitle">
+                Bienvenido, {user.nombre} — Gestiona tus fichas y genera códigos QR
+              </p>
+            </div>
+
+            {/* Cada sección siempre está montada, solo se oculta/visualiza con CSS */}
+            
+            <div style={{ display: activeTab === 'dashboard' ? 'block' : 'none' }}>
+              <DashboardHome user={user} />
+            </div>
+
+            <div style={{ display: activeTab === 'generar-qr' ? 'block' : 'none' }}>
+              <QRGenerator user={user} />
+            </div>
+
+            <div style={{ display: activeTab === 'mis-qr' ? 'block' : 'none' }}>
+              <QRList user={user} />
+            </div>
+
+            <div style={{ display: activeTab === 'mis-fichas' ? 'block' : 'none' }}>
+              <MisFichas user={user} />
+            </div>
+
+            <div style={{ display: activeTab === 'asistencia' ? 'block' : 'none' }}>
+              <VerAsistencia user={user} />
+            </div>
+
+            <div style={{ display: activeTab === 'mis-horarios' ? 'block' : 'none' }}>
+              <PlaceholderSection title="Mis Horarios" description="Tus horarios de clase" user={user} />
+            </div>
           </div>
-
-          {/* ✅ Cada sección siempre está montada, solo se oculta/visualiza con CSS */}
-          
-          <div style={{ display: activeTab === 'dashboard' ? 'block' : 'none' }}>
-            <DashboardHome user={user} />
-          </div>
-
-          <div style={{ display: activeTab === 'generar-qr' ? 'block' : 'none' }}>
-            <QRGenerator user={user} />
-          </div>
-
-          <div style={{ display: activeTab === 'mis-qr' ? 'block' : 'none' }}>
-            <QRList user={user} />
-          </div>
-
-          <div style={{ display: activeTab === 'mis-fichas' ? 'block' : 'none' }}>
-            <MisFichas user={user} />
-          </div>
-
-          <div style={{ display: activeTab === 'asistencia' ? 'block' : 'none' }}>
-            <VerAsistencia user={user} />
-          </div>
-
-          <div style={{ display: activeTab === 'mis-horarios' ? 'block' : 'none' }}>
-            <PlaceholderSection title="Mis Horarios" description="Tus horarios de clase" user={user} />
-          </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </InstructorProvider>
   );
 }
 

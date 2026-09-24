@@ -4,12 +4,34 @@ from models.asistencia import Asistencia
 from datetime import datetime, date
 from typing import Optional
 
-def crear_asistencia(db: Session, aprendiz_id: int, ficha_id: int, sede_id: int, codigo_id: str):
+def crear_asistencia(
+    db: Session, 
+    aprendiz_id: int, 
+    ficha_id: int, 
+    sede_id: int, 
+    codigo_id: str = None,
+    tipo: str = 'qr',
+    es_tarde: bool = False
+):
+    """
+    Crea un registro de asistencia.
+    
+    Args:
+        db: Sesión de base de datos
+        aprendiz_id: ID del aprendiz
+        ficha_id: ID de la ficha
+        sede_id: ID de la sede
+        codigo_id: ID del código QR (opcional para registro manual)
+        tipo: Tipo de registro ('qr' o 'manual')
+        es_tarde: Si el aprendiz llegó tarde
+    """
     asistencia = Asistencia(
         aprendiz_id=aprendiz_id,
         ficha_id=ficha_id,
         sede_id=sede_id,
-        codigo_id=codigo_id
+        codigo_id=codigo_id,
+        tipo=tipo,
+        es_tarde=es_tarde
     )
     db.add(asistencia)
     db.commit()
@@ -27,7 +49,6 @@ def existe_asistencia_hoy(db: Session, aprendiz_id: int, ficha_id: int) -> bool:
     return asistencia is not None
 
 
-# NUEVA FUNCIÓN: Obtener asistencias por instructor
 def obtener_asistencias_por_instructor(db: Session, instructor_id: int, ficha_id: Optional[int] = None):
     """
     Obtiene todas las asistencias de las fichas asignadas al instructor.

@@ -1,23 +1,47 @@
-// web/src/components/instructor/QRGenerator.jsx
 import { useState, useEffect } from 'react';
 import { adminService } from '../../services/admin.service';
 import { sileo } from 'sileo';
 import { QRCodeSVG } from 'qrcode.react';
+import { useInstructor } from '../../context/InstructorContext'; // ✅ Importar contexto
 
 export default function QRGenerator({ user }) {
   const [fichas, setFichas] = useState([]);
   const [selectedFicha, setSelectedFicha] = useState('');
   const [loading, setLoading] = useState(false);
-  const [qrData, setQrData] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
-  const [countdown, setCountdown] = useState(null);
+  
+  // ✅ Usar el estado global del contexto
+  const { activeQR, setActiveQR } = useInstructor();
 
   useEffect(() => {
     loadFichas();
-    return () => {
-      if (countdown) clearInterval(countdown);
-    };
   }, []);
+
+  // ✅ Efecto solo para la animación visual del reloj
+  useEffect(() => {
+    if (!activeQR) {
+      setTimeLeft(0);
+      return;
+    }
+
+    const updateTimer = () => {
+      const expiracion = new Date(activeQR.expiracion).getTime();
+      const remaining = Math.max(0, Math.floor((expiracion - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      
+      if (remaining <= 0) {
+        sileo.warning({
+          title: 'QR Expirado',
+          description: 'El código QR ha expirado. Genera uno nuevo.',
+        });
+      }
+    };
+
+    updateTimer(); // Ejecutar inmediatamente
+    const interval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(interval); // Limpiar al desmontar
+  }, [activeQR]);
 
   const loadFichas = async () => {
     try {
@@ -48,30 +72,13 @@ export default function QRGenerator({ user }) {
 
       const qrUrl = `${window.location.origin}/escanear/${response.data.id}`;
       
-      setQrData({
+      // ✅ Guardar en el contexto global (persiste entre pestañas)
+      setActiveQR({
         id: response.data.id,
         url: qrUrl,
         expiracion: response.data.expiracion,
         ficha: fichas.find(f => f.id === parseInt(selectedFicha)),
       });
-
-      // Iniciar countdown
-      const expiracion = new Date(response.data.expiracion).getTime();
-      const updateCountdown = () => {
-        const remaining = Math.max(0, Math.floor((expiracion - Date.now()) / 1000));
-        setTimeLeft(remaining);
-        if (remaining <= 0) {
-          clearInterval(countdown);
-          setQrData(null);
-          sileo.warning({
-            title: 'QR Expirado',
-            description: 'El código QR ha expirado. Genera uno nuevo.',
-          });
-        }
-      };
-      updateCountdown();
-      const newCountdown = setInterval(updateCountdown, 1000);
-      setCountdown(newCountdown);
 
       sileo.success({
         title: 'QR Generado',
@@ -126,7 +133,8 @@ export default function QRGenerator({ user }) {
         </button>
       </div>
 
-      {qrData && (
+      {/* ✅ Condición basada en el estado global */}
+      {activeQR && (
         <div className="qr-display">
           <div className="qr-header">
             <h3>Código QR Activo</h3>
@@ -137,7 +145,7 @@ export default function QRGenerator({ user }) {
 
           <div className="qr-code-container">
             <QRCodeSVG
-              value={qrData.url}
+              value={activeQR.url}
               size={256}
               level="H"
               includeMargin={true}
@@ -149,21 +157,21 @@ export default function QRGenerator({ user }) {
           <div className="qr-info">
             <div className="qr-info-row">
               <span className="qr-info-label">Ficha:</span>
-              <span className="qr-info-value">{qrData.ficha?.numero_ficha}</span>
+              <span className="qr-info-value">{activeQR.ficha?.numero_ficha}</span>
             </div>
             <div className="qr-info-row">
               <span className="qr-info-label">Programa:</span>
-              <span className="qr-info-value">{qrData.ficha?.nombre_programa}</span>
+              <span className="qr-info-value">{activeQR.ficha?.nombre_programa}</span>
             </div>
             <div className="qr-info-row">
               <span className="qr-info-label">ID:</span>
-              <span className="qr-info-value qr-id">{qrData.id.slice(0, 8)}...</span>
+              <span className="qr-info-value qr-id">{activeQR.id.slice(0, 8)}...</span>
             </div>
           </div>
 
-          <div className="qr-url">
+          <div className="qr-url" style={{ display: 'none' }}>
             <p className="qr-url-label">URL de escaneo:</p>
-            <code>{qrData.url}</code>
+            <code>{activeQR.url}</code>
           </div>
 
           <div className="qr-instructions">
