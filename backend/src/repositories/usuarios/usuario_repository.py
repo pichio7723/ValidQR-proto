@@ -9,6 +9,7 @@ def crear_usuario(db: Session, usuario_data: UsuarioCrear, password_hash: str) -
         email=usuario_data.email,
         password_hash=password_hash,
         rol=usuario_data.rol,
+        ficha_id=usuario_data.ficha_id,
     )
     db.add(nuevo_usuario)
     db.commit()
