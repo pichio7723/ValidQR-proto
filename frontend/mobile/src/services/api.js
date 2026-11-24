@@ -2,7 +2,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_URL = 'http://209.222.97.74:8001'; // ← CAMBIA ESTO
+const API_URL = 'https://validqr.duckdns.org'; // ← CAMBIA ESTO
 
 const api = axios.create({
   baseURL: API_URL,
