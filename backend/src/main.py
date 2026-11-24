@@ -31,7 +31,9 @@ app.include_router(codigo_qr_router)
 # Lista de orígenes permitidos (frontend)
 origins = [
     "http://localhost:5173",  # Vite dev
-    "http://localhost:3000",  # React default
+    "http://localhost:3000",
+    "https://valid-qr-proto.vercel.app",  # Vercel
+    "https://validqr.duckdns.org",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
 ]
