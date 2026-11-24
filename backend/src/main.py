@@ -10,12 +10,31 @@ from routes.horarios.horario_routes import router as horario_router
 from routes.codigos_qr.codigo_qr_routes import router as codigo_qr_router
 from fastapi.middleware.cors import CORSMiddleware
 
-
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://valid-qr-proto.vercel.app",
+    "https://validqr.duckdns.org",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000"
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def read_root():
     return {"mensaje": "ValidQR API funcionando"}
+
 
 app.include_router(usuario_router)
 app.include_router(ficha_router)
@@ -26,22 +45,3 @@ app.include_router(franja_router)
 app.include_router(trimestre_router)
 app.include_router(horario_router)
 app.include_router(codigo_qr_router)
-
-
-# Lista de orígenes permitidos (frontend)
-origins = [
-    "http://localhost:5173",  # Vite dev
-    "http://localhost:3000",
-    "https://valid-qr-proto.vercel.app",  # Vercel
-    "https://validqr.duckdns.org",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,  # Lista específica en lugar de ["*"]
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
