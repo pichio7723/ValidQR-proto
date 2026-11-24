@@ -266,7 +266,7 @@ export default function VerAsistencia({ user }) {
                     <td style={{ padding: '1rem' }}>{asist.sede_nombre || '-'}</td>
                     <td style={{ padding: '1rem' }}>
                       <span style={{ background: asist.tipo === 'manual' ? '#f59e0b' : '#3b82f6', color: 'white', padding: '0.25rem 0.75rem', borderRadius: '99px', fontSize: '0.85rem', fontWeight: 'bold' }}>
-                        {asist.tipo === 'manual' ? '📝 Manual' : '📱 QR'}
+                        {asist.tipo === 'manual' ? 'Manual' : 'QR'}
                       </span>
                     </td>
                     <td style={{ padding: '1rem' }}>
