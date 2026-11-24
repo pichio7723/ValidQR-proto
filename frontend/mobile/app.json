@@ -1,25 +1,60 @@
 {
   "expo": {
-    "name": "tmp-expo",
-    "slug": "tmp-expo",
+    "name": "ValidQR",
+    "slug": "validqr",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pichirionix.validqr",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "ValidQR necesita tu ubicación para registrar la asistencia.",
+        "NSCameraUsageDescription": "ValidQR necesita acceso a la cámara para escanear códigos QR."
+      }
     },
     "android": {
+      "package": "com.pichirionix.validqr",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#000000",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundImage": "./assets/android-icon-background.png"
       },
-      "package": "com.anonymous.tmpexpo"
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "INTERNET"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": ""
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-location",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "ValidQR necesita acceso a la cámara para escanear códigos QR."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "SE_REEMPLAZA_DESPUES_DE_eas_build_configure"
+      }
     }
   }
 }
